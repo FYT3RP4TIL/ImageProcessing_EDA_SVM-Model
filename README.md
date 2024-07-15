@@ -188,3 +188,81 @@ Out of the principle components elbow plot shows that a good number of component
 
 Hence, PCA will be trained with 50 principle components. This model will be saved as well as the mean face (here npz format numpyzip - data, pca_50 with mean face via pickle (pca_dict.pickle), eigen images visulized in the notebook(03)).
 
+## SVM (Support Vector Machine) Classifier Model
+
+![image](https://github.com/user-attachments/assets/f810313a-b7b2-4baa-87e2-4c2ed3df58cb)
+
+- Support Vector Machine (SVM) is a powerful machine learning algorithm used for linear or nonlinear classification, regression, and even outlier detection tasks. SVMs can be used for a variety of tasks, such as text classification, image classification, spam detection, handwriting identification, gene expression analysis, face detection, and anomaly detection. SVMs are adaptable and efficient in a variety of applications because they can manage high-dimensional data and nonlinear relationships.
+
+- The main objective of the SVM algorithm is to find the optimal hyperplane in an N-dimensional space that can separate the data points in different classes in the feature space. The hyperplane tries that the margin between the closest points of different classes should be as maximum as possible. The dimension of the hyperplane depends upon the number of features. If the number of input features is two, then the hyperplane is just a line. If the number of input features is three, then the hyperplane becomes a 2-D plane. It becomes difficult to imagine when the number of features exceeds three.
+
+### Hyperparameter Tuning with GridSearchCV
+
+- GridSearchCV acts as a valuable tool for identifying the optimal parameters for a machine learning model. Imagine you have a machine learning model with adjustable settings, known as hyperparameters, that can enhance its performance. GridSearchCV aids in pinpointing the best combination of these hyperparameters automatically.
+
+- You provide GridSearchCV with a set of Scoring parameter to experiment with, and it systematically explores each possible combination. For every combination, it evaluates the model’s performance by testing it on various sections of the dataset to gauge its accuracy.
+
+- After exhaustively trying out all the combinations, GridSearchCV presents you with the combination of settings that yielded the most favorable outcomes. This streamlines the process of fine-tuning your model, ensuring it operates optimally for your specific task without incurring excessive computational expenses.
+
+The grid search provided by GridSearchCV exhaustively generates candidates from a grid of parameter values specified with the param_grid parameter. For instance, the following param_grid
+
+```python 
+model_svc = SVC(probability=True)
+
+param_grid = {'C':[0.5,1,10,20,30,50],
+             'kernel':['rbf','poly'],
+             'gamma':[0.1,0.05,0.01,0.001,0.002,0.005],
+             'coef0':[0,1]}
+
+model_grid = GridSearchCV(model_svc,
+                          param_grid=param_grid,
+                          scoring='accuracy',cv=3,verbose=2)
+
+model_grid.fit(x_train,y_train)
+```
+
+```python
+model_grid.best_params_
+```
+
+Output : 
+
+```python
+{'C': 20, 'coef0': 0, 'gamma': 0.002, 'kernel': 'rbf'}
+```
+
+## Model Evaluation :
+
+- **Classification Report**
+  - Precision, Recall, F1-Score
+
+- **Kappa Score (Good for Multiclass Problems)**
+  - -ve (worst model)
+  - 0 to 0.5 (bad model)
+  - 0.5 to 0.7 (good model)
+  - 0.7 to 0.9 (excellent model)
+  - 0.9 to 1.0 (perfect model)
+
+- **AUC**
+  - Less than 0.5 (worst model)
+  - 0.5 to 0.6 (bad model)
+  - 0.6 to 0.8 (good model)
+  - 0.8 to 0.9 (excellent model)
+  - 0.9 to 1.0 (perfect model)
+ 
+### Classification Report
+
+|              | Precision | Recall   | F1-Score | Support |
+|--------------|-----------|----------|----------|---------|
+| **Female**   | 0.805611  | 0.842767 | 0.823770 | 477.000 |
+| **Male**     | 0.794521  | 0.749354 | 0.771277 | 387.000 |
+| **Accuracy** | 0.800926  | 0.800926 | 0.800926 | 0.800926|
+| **Macro Avg**| 0.800066  | 0.796061 | 0.797524 | 864.000 |
+| **Weighted Avg** | 0.800644  | 0.800926 | 0.800258 | 864.000 |
+
+### Additional Metrics
+
+| Metric       | Value         |
+|--------------|---------------|
+| **Kappa Score** | 0.595314   |
+| **AUC**         | 0.796066   |
